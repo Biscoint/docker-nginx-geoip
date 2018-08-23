@@ -16,9 +16,7 @@ RUN set -x && DEBIAN_FRONTEND=noninteractive apt-get update \
     && echo 'deb https://packages.amplify.nginx.com/debian/ stretch amplify-agent' > /etc/apt/sources.list.d/nginx-amplify.list \
     && curl -fs https://nginx.org/keys/nginx_signing.key | apt-key add - > /dev/null 2>&1 \
     && apt-get update \
-    && apt-get install -qqy nginx-amplify-agent \
-    && apt-get purge -qqy curl apt-transport-https apt-utils gnupg1 \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get install -qqy nginx-amplify-agent
 
 # Keep the nginx logs inside the container
 RUN unlink /var/log/nginx/access.log \
@@ -82,6 +80,10 @@ RUN set -x && mkdir -p /usr/share/geoip \
   && wget -O /tmp/city.tar.gz http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz \
   && tar xf /tmp/city.tar.gz -C /usr/share/geoip --strip 1 \
   && ls -al /usr/share/geoip/
+  
+RUN apt-get remove --purge -y \
+    curl apt-transport-https apt-utils gnupg1 \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY ./entrypoint.sh /entrypoint.sh
 
