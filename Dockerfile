@@ -26,6 +26,9 @@ RUN unlink /var/log/nginx/access.log \
     && chown nginx /var/log/nginx/*log \
     && chmod 644 /var/log/nginx/*log
 
+# Copy nginx stub_status config
+COPY ./conf.d/stub_status.conf /etc/nginx/conf.d
+
 # The actual nginx server config, this needs to get loaded last.
 # Make sure you copy it to default.conf to overwrite the normal config!
 #COPY config/nginx.conf /etc/nginx/nginx.conf
