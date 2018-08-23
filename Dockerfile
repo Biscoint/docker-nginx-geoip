@@ -30,8 +30,8 @@ RUN unlink /var/log/nginx/access.log \
 
 # The actual nginx server config, this needs to get loaded last.
 # Make sure you copy it to default.conf to overwrite the normal config!
-COPY config/nginx.conf /etc/nginx/nginx.conf
-COPY config/proxy.conf /etc/nginx/conf.d/default.conf
+#COPY config/nginx.conf /etc/nginx/nginx.conf
+#COPY config/proxy.conf /etc/nginx/conf.d/default.conf
 
 # Install Maxmind db library
 ENV MAXMIND_VERSION=1.2.1
