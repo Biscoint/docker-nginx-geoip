@@ -31,7 +31,7 @@ COPY ./conf.d/stub_status.conf /etc/nginx/conf.d
 
 # The actual nginx server config, this needs to get loaded last.
 # Make sure you copy it to default.conf to overwrite the normal config!
-#COPY config/nginx.conf /etc/nginx/nginx.conf
+COPY config/nginx.conf /etc/nginx/nginx.conf
 #COPY config/proxy.conf /etc/nginx/conf.d/default.conf
 
 # Install Maxmind db library
