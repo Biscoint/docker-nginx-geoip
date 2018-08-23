@@ -11,7 +11,22 @@ RUN set -x && DEBIAN_FRONTEND=noninteractive apt-get update \
     libpcre3-dev \
     zlib1g-dev \
     wget \
-    unzip
+    unzip \
+    curl python apt-transport-https apt-utils gnupg1 procps \
+    && echo 'deb https://packages.amplify.nginx.com/debian/ stretch amplify-agent' > /etc/apt/sources.list.d/nginx-amplify.list \
+    && curl -fs https://nginx.org/keys/nginx_signing.key | apt-key add - > /dev/null 2>&1 \
+    && apt-get update \
+    && apt-get install -qqy nginx-amplify-agent \
+    && apt-get purge -qqy curl apt-transport-https apt-utils gnupg1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Keep the nginx logs inside the container
+RUN unlink /var/log/nginx/access.log \
+    && unlink /var/log/nginx/error.log \
+    && touch /var/log/nginx/access.log \
+    && touch /var/log/nginx/error.log \
+    && chown nginx /var/log/nginx/*log \
+    && chmod 644 /var/log/nginx/*log
 
 # The actual nginx server config, this needs to get loaded last.
 # Make sure you copy it to default.conf to overwrite the normal config!
@@ -67,5 +82,9 @@ RUN set -x && mkdir -p /usr/share/geoip \
   && tar xf /tmp/city.tar.gz -C /usr/share/geoip --strip 1 \
   && ls -al /usr/share/geoip/
 
-EXPOSE 80
-EXPOSE 443
+COPY ./entrypoint.sh /entrypoint.sh
+
+# TO set/override API_KEY and AMPLIFY_IMAGENAME when starting an instance:
+# docker run --name my-nginx1 -e API_KEY='..effc' -e AMPLIFY_IMAGENAME="service-name" -d nginx-amplify
+
+ENTRYPOINT ["/entrypoint.sh"]
