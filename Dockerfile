@@ -1,4 +1,4 @@
-FROM nginx:1.13.5
+FROM nginx:1.17.1
 MAINTAINER mail@karelbemelmans.com
 
 RUN set -x && DEBIAN_FRONTEND=noninteractive apt-get update \
